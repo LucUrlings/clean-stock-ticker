@@ -17,7 +17,7 @@ export const TickerData = new Schema({
     lastUpdated: {type: Date, default: Date.now}
 });
 
-export const TickersToTrack = new Schema({
+export const ActiveAnonymousUsers = new Schema({
     id: ObjectId,
     tickers: [String]
 })
