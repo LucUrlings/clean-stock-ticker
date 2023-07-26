@@ -1,4 +1,3 @@
-import Head from "next/head";
 import {PageLayout} from "~/components/layout";
 import {useState} from "react";
 import Cookies from 'js-cookie'
@@ -25,17 +24,26 @@ export default function Home() {
         setTickers([])
     }
 
+    const removeTicker = (ticker: string) => {
+        if (tickers) {
+            const newTickers = tickers.filter((t) => t !== ticker)
+            Cookies.set('tickers', newTickers.join(','))
+            setTickers(newTickers)
+        }
+    }
+
 
   return (
     <>
       <PageLayout>
-        <div className="h-full w-full">
-            <div className="flex border-b border-slate-400 p-4">
-                <button type="button" className="bg-transparent hover:bg-slate-100 text-white hover:text-black font-semibold py-2 px-4 border border-slate-500 hover:border-transparent rounded-full" onClick={clearTickers}>
+        <div className="">
+            <div className="border-b border-slate-400 p-4">
+                <button type="button" className="bg-transparent hover:bg-slate-100 text-white hover:text-black font-semibold py-2 px-4 border-2 border-slate-500 hover:border-transparent rounded-full" onClick={clearTickers}
+                >
                     Clear Tickers
                 </button>
             </div>
-            <TickerGrid tickers={tickers} addTicker={addTicker}/>
+            <TickerGrid tickers={tickers} addTicker={addTicker} removeTicker={removeTicker}/>
         </div>
       </PageLayout>
     </>
