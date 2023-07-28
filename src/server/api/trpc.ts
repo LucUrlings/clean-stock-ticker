@@ -11,6 +11,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
+import {Context} from "~/server/api/context";
 
 /**
  * 1. CONTEXT
@@ -56,19 +57,14 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  * errors on the backend.
  */
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
-    };
+  errorFormatter({ shape }) {
+    return shape;
   },
 });
+
+
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
