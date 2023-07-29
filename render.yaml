@@ -18,5 +18,3 @@ services:
 
       - key: DATABASE_URL
         value: mongodb+srv://dbUser:<password>@cluster0.lu9u89i.mongodb.net/?retryWrites=true&w=majority
-
-      - fromGroup: trpc-websockets
