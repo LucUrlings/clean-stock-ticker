@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from '../trpc';
 import { observable } from "@trpc/server/observable";
 
 export const tickerRouter = createTRPCRouter({
