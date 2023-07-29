@@ -15,7 +15,7 @@
     "dev": " npm run dev:next & npm run dev:wss",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "cross-env NODE_ENV=production node dist/server/api/wsServer.js"
+    "start": "cross-env NODE_ENV=production node dist/server/prodServer.js"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
