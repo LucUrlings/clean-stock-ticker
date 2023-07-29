@@ -1,15 +1,18 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { observable } from "@trpc/server/observable";
 
-export const exampleRouter = createTRPCRouter({
-    hello: publicProcedure
-        .input(z.object({ text: z.string() }))
-        .query(({ input }) => {
-            return {
-                greeting: `Hello ${input.text}`,
-            };
-        }),
-    // getAll: publicProcedure.query(({ ctx }) => {
-    //     return ctx.prisma.example.findMany();
-    // }),
+export const tickerRouter = createTRPCRouter({
+  ticker: publicProcedure.subscription(() => {
+    return observable<number>((emit) => {
+      const timer = setInterval(() => {
+        // emits a number every second
+        emit.next(Math.random());
+      }, 200);
+
+      return () => {
+        clearInterval(timer);
+      };
+    });
+  }),
 });

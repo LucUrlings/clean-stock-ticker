@@ -7,6 +7,11 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  publicRuntimeConfig: {
+    // Will be available on both server and client
+    APP_URL: process.env.APP_URL,
+    WS_URL: process.env.WS_URL,
+  },
 
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config

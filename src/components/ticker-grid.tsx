@@ -13,13 +13,15 @@ export const TickerGrid = ({
 }: TickerGridProps) => {
   return (
     <div className="grid-rows-0 grid h-full grid-cols-2 gap-4">
-      {tickers.map((ticker) => {
+      {tickers.map((ticker, index) => {
         return (
-            <div className="h-1/2"><Ticker ticker={ticker} removeTicker={removeTicker} /></div>
-        )
+          <div key={`Ticker-${ticker}-${index}`} className="h-1/2">
+            <Ticker ticker={ticker} removeTicker={removeTicker} />
+          </div>
+        );
       })}
 
-      <AddTickerComponent addTicker={addTicker} />
+      <AddTicker addTicker={addTicker} />
     </div>
   );
 };
@@ -27,7 +29,7 @@ export const TickerGrid = ({
 type AddTickerComponentProps = {
   addTicker: (ticker: string) => void;
 };
-const AddTickerComponent = ({ addTicker }: AddTickerComponentProps) => {
+const AddTicker = ({ addTicker }: AddTickerComponentProps) => {
   const [input, setInput] = useState("");
 
   return (

@@ -8,7 +8,37 @@ import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
-import { type AppRouter } from "~/server/api/root";
+import {AppRouter} from "~/server/api/routers/_app";
+import { NextPageContext } from 'next';
+import { wsLink, createWSClient } from '@trpc/client/links/wsLink';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const { APP_URL, WS_URL } = publicRuntimeConfig;
+
+function getEndingLink(ctx: NextPageContext | undefined) {
+  if (typeof window === 'undefined') {
+    return httpBatchLink({
+      url: `${APP_URL}/api/trpc`,
+      headers() {
+        if (!ctx?.req?.headers) {
+          return {};
+        }
+        // on ssr, forward client's headers to the server
+        return {
+          ...ctx.req.headers,
+          'x-ssr': '1',
+        };
+      },
+    });
+  }
+  const client = createWSClient({
+    url: WS_URL,
+  });
+  return wsLink<AppRouter>({
+    client,
+  });
+}
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -18,7 +48,7 @@ const getBaseUrl = () => {
 
 /** A set of type-safe react-query hooks for your tRPC API. */
 export const api = createTRPCNext<AppRouter>({
-  config() {
+  config({ctx}) {
     return {
       /**
        * Transformer used for data de-serialization from the server.
@@ -41,6 +71,7 @@ export const api = createTRPCNext<AppRouter>({
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
         }),
+        getEndingLink(ctx),
       ],
     };
   },
