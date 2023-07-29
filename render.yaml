@@ -1,0 +1,22 @@
+# previewsEnabled: true
+# previewsExpireAfterDays: 7 # automatically delete the environment after the specified number of days of inactivity
+services:
+  - type: web
+    name: clean-stock-ticker
+    env: node
+    plan: free
+    # NODE_ENV is development here in order for pnpm to install dev deps
+    buildCommand: NODE_ENV=development npm install && npm build
+    startCommand: npm start
+    # healthCheckPath: /api/trpc/healthcheck
+    # Preview Environment Initialization
+    # initialDeployHook: |
+    #   pnpm run db-seed
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: DATABASE_URL
+        value: mongodb+srv://dbUser:<password>@cluster0.lu9u89i.mongodb.net/?retryWrites=true&w=majority
+
+      - fromGroup: trpc-websockets
