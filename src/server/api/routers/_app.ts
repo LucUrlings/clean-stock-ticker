@@ -4,7 +4,7 @@
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import { observable } from '@trpc/server/observable';
 import { clearInterval } from 'timers';
-import {tickerRouter} from "~/server/api/routers/ticker";
+import {tickerRouter} from "./ticker";
 
 export const appRouter = createTRPCRouter({
     healthcheck: publicProcedure.query(() => 'yay!'),
