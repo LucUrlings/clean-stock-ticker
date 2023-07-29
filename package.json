@@ -2,7 +2,11 @@
   "name": "clean-stock-ticker",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^18.15.0"
+  },
   "scripts": {
+    "prebuild": "prisma generate && prisma migrate deploy",
     "build-next": "cross-env NODE_ENV=production next build",
     "build-server": "tsc --project tsconfig.server.json",
     "build": "run-s build-next build-server",
