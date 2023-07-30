@@ -2,21 +2,31 @@
   "name": "clean-stock-ticker",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^18.15.0"
+  },
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "prebuild": "prisma generate",
+    "build-next": "cross-env NODE_ENV=production next build",
+    "build-server": "tsc --project tsconfig.server.json",
+    "build": "run-s build-next build-server",
+    "dev:wss": "cross-env PORT=3033 tsx watch src/server/wsServer.ts --tsconfig tsconfig.server.json ",
+    "dev:next": "next dev",
+    "dev": " run-p dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "cross-env NODE_ENV=production node dist/server/prodServer.js"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
+    "@react-buddy/ide-toolbox-next": "^2.4.1",
     "@t3-oss/env-nextjs": "^0.3.1",
     "@tanstack/react-query": "^4.29.7",
     "@trpc/client": "^10.26.0",
     "@trpc/next": "^10.26.0",
     "@trpc/react-query": "^10.26.0",
     "@trpc/server": "^10.26.0",
+    "cross-env": "^7.0.3",
     "daisyui": "^3.0.2",
     "js-cookie": "^3.0.5",
     "next": "^13.4.2",
@@ -24,6 +34,8 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "superjson": "1.12.2",
+    "tsx": "^3.12.7",
+    "ws": "^8.13.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -33,11 +45,13 @@
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.40.0",
     "eslint-config-next": "^13.4.2",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
