@@ -8,7 +8,7 @@ import {httpLink, loggerLink} from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
-import { AppRouter } from "../server/api/routers/_app";
+import { AppRouter } from "~/server/routers/_app";
 import { NextPageContext } from "next";
 import { wsLink, createWSClient } from "@trpc/client/links/wsLink";
 import getConfig from "next/config";
