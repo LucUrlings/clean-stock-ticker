@@ -4,7 +4,7 @@
  *
  * We also create a few inference helpers for input and output types.
  */
-import {httpLink, loggerLink} from "@trpc/client";
+import {httpLink, loggerLink, splitLink} from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
@@ -17,26 +17,20 @@ const { publicRuntimeConfig } = getConfig();
 const { APP_URL, WS_URL } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
-  if (typeof window === "undefined") {
-    return httpLink({
-      url: `${APP_URL}/api/trpc`,
-      headers() {
-        if (!ctx?.req?.headers) {
-          return {};
-        }
-        // on ssr, forward client's headers to the server
-        return {
-          ...ctx.req.headers,
-          "x-ssr": "1",
-        };
-      },
-    });
-  }
   const client = createWSClient({
-    url: WS_URL,
+    url: "ws://localhost:3033",
   });
-  return wsLink<AppRouter>({
-    client,
+
+  return splitLink({
+    condition(op) {
+      return op.type === "subscription";
+    },
+    true: wsLink<AppRouter>({
+      client,
+    }),
+    false: httpLink({
+      url: "http://localhost:3000/api/trpc",
+    }),
   });
 }
 

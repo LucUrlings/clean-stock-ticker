@@ -10,9 +10,9 @@
     "build-next": "cross-env NODE_ENV=production next build",
     "build-server": "tsc --project tsconfig.server.json",
     "build": "run-s build-next build-server",
-    "dev:wss": "cross-env PORT=3001 tsx watch src/server/wsServer.ts --tsconfig tsconfig.server.json ",
+    "dev:wss": "cross-env PORT=3033 tsx watch src/server/wsServer.ts --tsconfig tsconfig.server.json ",
     "dev:next": "next dev",
-    "dev": " npm run dev:next & npm run dev:wss",
+    "dev": " run-p dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "cross-env NODE_ENV=production node dist/server/prodServer.js"
