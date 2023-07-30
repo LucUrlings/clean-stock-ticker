@@ -11,7 +11,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
 // import { prisma } from "~/server/db";
-import {Context} from "~/server/api/context";
+import {Context} from "./context";
 
 /**
  * 1. CONTEXT
