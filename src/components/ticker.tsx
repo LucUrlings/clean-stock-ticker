@@ -9,11 +9,13 @@ type TickerProps = {
 export const Ticker = ({ ticker, removeTicker }: TickerProps) => {
   const [tickerValue, setTickerValue] = useState<number>(0);
 
-  api.ticker.ticker.useSubscription(undefined, {
-    onData(n) {
-      setTickerValue(n);
-    },
-  });
+  api.ticker.ticker.useSubscription({v: Math.random()},
+    {
+      onData(n) {
+        setTickerValue(n.value);
+      },
+    }
+  );
 
   return (
     <>
@@ -25,7 +27,7 @@ export const Ticker = ({ ticker, removeTicker }: TickerProps) => {
         >
           {tickerValue}
         </div>
-      <p>aaa</p>
+        <p>aaa</p>
       </div>
     </>
   );

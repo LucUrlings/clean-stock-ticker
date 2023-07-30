@@ -1,6 +1,6 @@
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import ws from 'ws';
-import { appRouter } from './api/router'
+import { appRouter } from './api/routers/_app'
 import { createContext } from './api/context';
 
 const wss = new ws.Server({
