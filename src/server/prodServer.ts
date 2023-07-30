@@ -26,7 +26,7 @@ void app.prepare().then(() => {
     const parsedUrl = parse(req.url!, true);
     void handle(req, res, parsedUrl);
   });
-  const wss = new ws.Server({ server, port });
+  const wss = new ws.Server({ server });
   const handler = applyWSSHandler({ wss, router: appRouter, createContext });
 
   wss.on('connection', (ws) => {
@@ -40,7 +40,7 @@ void app.prepare().then(() => {
     console.log('SIGTERM');
     handler.broadcastReconnectNotification();
   });
-  // server.listen(port);
+  server.listen(port);
 
   console.log(
       `> Server listening at http://localhost:${port} as ${
