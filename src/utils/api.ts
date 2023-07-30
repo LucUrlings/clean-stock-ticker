@@ -12,6 +12,7 @@ import { AppRouter } from "~/server/routers/_app";
 import { NextPageContext } from "next";
 import { wsLink, createWSClient } from "@trpc/client/links/wsLink";
 import getConfig from "next/config";
+import {createTRPCReact} from "@trpc/react-query";
 
 const { publicRuntimeConfig } = getConfig();
 const { APP_URL, WS_URL } = publicRuntimeConfig;
@@ -33,6 +34,12 @@ function getEndingLink(ctx: NextPageContext | undefined) {
     }),
   });
 }
+
+/**
+ * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
+ * @link https://trpc.io/docs/react#3-create-trpc-hooks
+ */
+export const trpc = createTRPCReact<AppRouter>();
 
 /** A set of type-safe react-query hooks for your tRPC API. */
 export const api = createTRPCNext<AppRouter>({
