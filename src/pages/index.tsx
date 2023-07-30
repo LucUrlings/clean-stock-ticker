@@ -1,7 +1,7 @@
-import { PageLayout } from "~/components/layout";
+import { PageLayout } from "../components/layout";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { TickerGrid } from "~/components/ticker-grid";
+import { TickerGrid } from "../components/ticker-grid";
 
 export default function Home() {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });

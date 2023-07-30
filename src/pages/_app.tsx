@@ -1,10 +1,10 @@
 import {type AppType} from "next/app";
-import {api} from "~/utils/api";
+import {api} from "../utils/api";
 import "~/styles/globals.css";
 import Head from "next/head";
 import {Toaster} from "react-hot-toast";
 import {DevSupport} from "@react-buddy/ide-toolbox-next";
-import {ComponentPreviews, useInitial} from "~/dev";
+import {ComponentPreviews, useInitial} from "../dev";
 
 const MyApp: AppType = ({Component, pageProps}) => {
     return (

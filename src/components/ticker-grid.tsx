@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Ticker } from "~/components/ticker";
+import { Ticker } from "./ticker";
 
 type TickerGridProps = {
   tickers: string[];
