@@ -19,7 +19,7 @@ const { APP_URL, WS_URL } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
   const client = createWSClient({
-    url: "ws://localhost:3033",
+    url: WS_URL,
   });
 
   return splitLink({
@@ -30,7 +30,7 @@ function getEndingLink(ctx: NextPageContext | undefined) {
       client,
     }),
     false: httpLink({
-      url: "http://localhost:3000/api/trpc",
+      url: `${APP_URL}/api/trpc`,
     }),
   });
 }
