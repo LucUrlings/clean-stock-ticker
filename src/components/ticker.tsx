@@ -1,4 +1,4 @@
-import {api, trpc} from "../utils/api";
+import { trpc } from "~/utils/api";
 import { useState } from "react";
 
 type TickerProps = {
@@ -9,34 +9,26 @@ type TickerProps = {
 export const Ticker = ({ ticker, removeTicker }: TickerProps) => {
   const [tickerValue, setTickerValue] = useState<number>(0);
 
-  // api.ticker.ticker.useSubscription({v: Math.random()},
-  //   {
-  //     onData(n) {
-  //       setTickerValue(n.value);
-  //     },
-  //   }
-  // );
-
-
-  trpc.ticker.ticker.useSubscription({v: Math.random()},
-      {
-          onData(n) {
-              setTickerValue(n.value);
-          },
-      }
+  trpc.ticker.subscribeToTicker.useSubscription(
+    { ticker },
+    {
+      onData(n) {
+        setTickerValue(n.tickerPrice);
+      },
+    }
   );
 
   return (
     <>
       <div className="flex p-16">
         <div className="flex-grow">{ticker}</div>
+          {tickerValue}
         <div
           className="flex-shrink-0 flex-grow-0"
           onClick={() => removeTicker(ticker)}
         >
-          {tickerValue}
+          X
         </div>
-        <p>aaa</p>
       </div>
     </>
   );
