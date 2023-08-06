@@ -31,7 +31,7 @@ const interval = setInterval(() => {
   listenerCount.forEach((count, ticker) => {
     if (count > 0) {
       console.log("getting price for", ticker)
-      finnhubClient.quote(ticker, async (error, data, response) => {
+      finnhubClient.quote(ticker, async (error: {status: number, message: string}, data: {c:number}) => {
         if (error) {
           console.error("Error getting price", error.status, error.message);
           return;
