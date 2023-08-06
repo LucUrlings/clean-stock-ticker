@@ -2,8 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { clearInterval } from "timers";
-import * as finnhub from "finnhub";
-import { Overwrite, ProcedureParams, Simplify } from "@trpc/server";
+import * as finnhub from "finnhub"
 import { EventEmitter } from "events";
 
 const api_key = finnhub.ApiClient.instance.authentications["api_key"];
