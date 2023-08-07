@@ -12,12 +12,13 @@ datasource db {
 }
 
 model Ticker {
-  id        String   @id @default(cuid()) @map("_id")
-  symbol    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  price     Price    @relation(fields: [priceId], references: [id])
-  priceId   String
+  id          String   @id @default(cuid()) @map("_id")
+  symbol      String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subscribers Int
+  price       Price    @relation(fields: [priceId], references: [id])
+  priceId     String
 }
 
 model Price {
