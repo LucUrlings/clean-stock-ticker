@@ -1,4 +1,4 @@
-import { trpc } from "~/utils/api";
+import {api} from "../utils/api";
 import { useState } from "react";
 
 type TickerProps = {
@@ -9,7 +9,7 @@ type TickerProps = {
 export const Ticker = ({ ticker, removeTicker }: TickerProps) => {
   const [tickerValue, setTickerValue] = useState<number>(0);
 
-  trpc.ticker.subscribeToTicker.useSubscription(
+  api.ticker.subscribeToTicker.useSubscription(
     { ticker },
     {
       onData(n) {
