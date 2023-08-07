@@ -4,13 +4,13 @@
  *
  * We also create a few inference helpers for input and output types.
  */
-import {httpLink, loggerLink, splitLink} from "@trpc/client";
+import { httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 import { AppRouter } from "~/server/routers/_app";
 import { NextPageContext } from "next";
-import { wsLink, createWSClient } from "@trpc/client/links/wsLink";
+import { createWSClient, wsLink } from "@trpc/client/links/wsLink";
 import getConfig from "next/config";
 
 const { publicRuntimeConfig } = getConfig();
@@ -52,9 +52,9 @@ export const api = createTRPCNext<AppRouter>({
       links: [
         loggerLink({
           enabled: (opts) =>
-              (process.env.NODE_ENV === 'development' &&
-                  typeof window !== 'undefined') ||
-              (opts.direction === 'down' && opts.result instanceof Error),
+            (process.env.NODE_ENV === "development" &&
+              typeof window !== "undefined") ||
+            (opts.direction === "down" && opts.result instanceof Error),
         }),
         getEndingLink(ctx),
       ],

@@ -79,7 +79,6 @@ const interval = setInterval(() => {
             console.log("new price for", ticker, tickerData.lastPrice, data.c);
             updatePrice(ticker, data.c);
             ee.emit(ticker, { ticker: ticker, tickerPrice: data.c });
-
           }
         }
       );
