@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { clearInterval } from "timers";
-import * as finnhub from "finnhub"
+import * as finnhub from "finnhub";
 import { EventEmitter } from "events";
 
 const api_key = finnhub.ApiClient.instance.authentications["api_key"];
@@ -11,34 +11,80 @@ const finnhubClient = new finnhub.DefaultApi();
 
 const ee = new EventEmitter();
 
-const listenerCount = new Map<string, number>();
+const listenerCount = new Map<
+  string,
+  { listeners: number; lastPrice: number }
+>();
+
+const updatePrice = (ticker: string, price: number) => {
+  const tickerData = listenerCount.get(ticker) ?? {
+    listeners: 0,
+    lastPrice: 0,
+  };
+  if (tickerData.lastPrice !== price) {
+    tickerData.lastPrice = price;
+    listenerCount.set(ticker, tickerData);
+    ee.emit(ticker, price);
+  }
+};
 
 const addListener = (ticker: string) => {
-  console.log("adding listener for", ticker)
-  const count = listenerCount.get(ticker) ?? 0;
-  listenerCount.set(ticker, count + 1);
+  console.log("adding listener for", ticker);
+  const tickerData = listenerCount.get(ticker) ?? {
+    listeners: 0,
+    lastPrice: 0,
+  };
+  listenerCount.set(ticker, {
+    listeners: tickerData.listeners + 1,
+    lastPrice: 0,
+  });
 };
 
 const removeListener = (ticker: string) => {
-    console.log("removing listener for", ticker)
-  const count = listenerCount.get(ticker) ?? 0;
-  listenerCount.set(ticker, count - 1);
+  console.log("removing listener for", ticker);
+  const tickerData = listenerCount.get(ticker) ?? {
+    listeners: 0,
+    lastPrice: 0,
+  };
+  listenerCount.set(ticker, {
+    listeners: tickerData.listeners - 1,
+    lastPrice: 0,
+  });
 };
 
 const interval = setInterval(() => {
-  console.log("listenerCount", listenerCount.size)
-  listenerCount.forEach((count, ticker) => {
-    if (count > 0) {
-      console.log("getting price for", ticker)
-      finnhubClient.quote(ticker, async (error: {status: number, message: string}, data: {c:number}) => {
-        if (error) {
-          console.error("Error getting price", error.status, error.message);
-          return;
+  console.log("Different tickers", listenerCount.size);
+  console.log(
+    "Tickers listened to",
+    Array.from(listenerCount.entries()).reduce(
+      (accumulator, [key, value]) => accumulator + value.listeners,
+      0
+    )
+  );
+  listenerCount.forEach((tickerData, ticker) => {
+    if (tickerData.listeners > 0) {
+      console.log("getting price for", ticker);
+
+      finnhubClient.quote(
+        ticker,
+        async (
+          error: { status: number; message: string },
+          data: { c: number }
+        ) => {
+          if (error) {
+            console.error("Error getting price", error.status, error.message);
+            return;
+          }
+          if (data.c !== tickerData.lastPrice) {
+            console.log("new price for", ticker, tickerData.lastPrice, data.c);
+            updatePrice(ticker, data.c);
+            ee.emit(ticker, { ticker: ticker, tickerPrice: data.c });
+
+          }
         }
-        ee.emit(ticker, { ticker: ticker, tickerPrice: data.c });
-      });
+      );
     }
-  })
+  });
 }, 5000);
 process.on("SIGTERM", () => {
   clearInterval(interval);
@@ -75,14 +121,20 @@ export const tickerRouter = createTRPCRouter({
       return observable<{ ticker: string; tickerPrice: number }>((emit) => {
         addListener(input.ticker);
 
-        const onNewPrice = ({ ticker, tickerPrice }: { ticker: string, tickerPrice: number }) => {
+        const onNewPrice = ({
+          ticker,
+          tickerPrice,
+        }: {
+          ticker: string;
+          tickerPrice: number;
+        }) => {
           emit.next({ ticker, tickerPrice });
-        }
+        };
 
         ee.on(input.ticker, onNewPrice);
 
         return () => {
-          ee.off(input.ticker, onNewPrice)
+          ee.off(input.ticker, onNewPrice);
           removeListener(input.ticker);
         };
       });
