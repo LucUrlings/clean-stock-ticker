@@ -12,16 +12,13 @@ export default function Home() {
     if (tickers.length > 0) {
       Cookies.set("tickers", tickers + "," + ticker);
       setTickers([...tickers, ticker]);
-    } else {
-      Cookies.set("tickers", ticker);
-      setTickers([ticker]);
     }
   };
 
   const loadTickers = () => {
     const initCookies: string[] | undefined =
-      Cookies.get("tickers")?.split(",");
-    setTickers(initCookies ?? []);
+      Cookies.get("tickers")?.split(",") ?? [];
+    setTickers(initCookies);
   };
 
   const clearTickers = () => {
