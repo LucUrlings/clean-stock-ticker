@@ -21,8 +21,6 @@ services:
           name: elephant
           property: connectionString
 
-      - fromGroup: clean-stock-ticker
-
 databases:
   - name: elephant
     plan: free
